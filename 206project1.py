@@ -81,9 +81,31 @@ def findDay(a):
 # Input: list of dictionaries
 # Output: Return the day of month (1-31) that is the
 # most often seen in the DOB
+	date_count = {}
+	tuple_count = list()
 
 	#Your code here:
-	pass
+	for dict in a:
+		for key in dict:
+			if key == 'DOB':
+				dob = dict[key]
+				index_start = dob.find('/') + 1
+				day_on = dob[index_start:]
+				index_end = day_on.find('/')
+				day = day_on[:index_end]
+				if day not in date_count:
+					date_count[day] = 1
+				else:
+					date_count[day] += 1
+
+	for key, value in date_count.items():
+		tuple_count.append((key, value))
+	sorted_list = sorted(tuple_count, key=lambda x: x[1], reverse=True)
+
+	return int(sorted_list[0][0])
+
+
+
 
 
 # Find the average age (rounded) of the Students
@@ -94,6 +116,7 @@ def findAge(a):
 
 	#Your code here:
 	pass
+
 
 #Similar to mySort, but instead of returning single
 #Student, all of the sorted data is saved to a csv file.

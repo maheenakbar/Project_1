@@ -1,7 +1,7 @@
 import os
 import csv
 import filecmp
-from datetime import date
+import datetime
 
 def getData(file):
 #Input: file name
@@ -35,7 +35,7 @@ def mySort(data,col):
 #Input: list of dictionaries
 #Output: Return a string of the form firstName lastName
 
-	#Your code here:
+	#sorts the list using 'col' input as  the key to sort by
 	sorted_list = sorted(data, key=lambda x: x[col])
 
 	return sorted_list[0]['First'] + ' ' + sorted_list[0]['Last']
@@ -53,16 +53,20 @@ def classSizes(data):
 
 	for dict in data:
 		for key in dict:
-			#print (key)
 			if key == 'Class':
+				#creates dictionary that counts how many students are in each year
 				if dict[key] not in size_dict:
 					size_dict[dict[key]] = 1
 				else:
 					size_dict[dict[key]] += 1
 
+	#creates a list of tuples from that dictionary
 	for key, value in size_dict.items():
 		tuple_count.append((key, value))
+
+	#sorts the list by class
 	sorted_list = sorted(tuple_count, key=lambda x: x[0])
+	#sorts the list by number of students
 	final_list = sorted(sorted_list, key=lambda x: x[1], reverse=True)
 
 	return final_list
@@ -78,7 +82,6 @@ def findDay(a):
 	date_count = {}
 	tuple_count = list()
 
-	#Your code here:
 	for dict in a:
 		for key in dict:
 			if key == 'DOB':
@@ -87,11 +90,13 @@ def findDay(a):
 				day_on = dob[index_start:]
 				index_end = day_on.find('/')
 				day = day_on[:index_end]
+				#creates dictionary where day of month is key and frequency is the value
 				if day not in date_count:
 					date_count[day] = 1
 				else:
 					date_count[day] += 1
 
+	#creates list of tuples using the dictionary
 	for key, value in date_count.items():
 		tuple_count.append((key, value))
 	sorted_list = sorted(tuple_count, key=lambda x: x[1], reverse=True)
@@ -105,11 +110,26 @@ def findDay(a):
 # Find the average age (rounded) of the Students
 def findAge(a):
 # Input: list of dictionaries
-# Output: Return the day of month (1-31) that is the
-# most often seen in the DOB
+	total_age = 0.0
+	count = 0
 
-	#Your code here:
-	pass
+	for dict in a:
+		bday_string = dict['DOB']
+		bday_object = datetime.datetime.strptime(bday_string, '%m/%d/%Y')
+		current = datetime.date.today()
+		subtract_1 = ((float(current.month), float(current.day)) < (float(bday_object.month), float(bday_object.day)))
+		#accounts for future birthdays
+		if bday_object.year > 2017:
+			age = 0
+		else:
+			age = float(current.year) - float(bday_object.year) - subtract_1
+		total_age += age
+		count += 1.0
+
+	average = (total_age) / count
+	return int(average)
+
+	
 
 
 #Similar to mySort, but instead of returning single
@@ -118,33 +138,12 @@ def mySortPrint(a,col,fileName):
 #Input: list of dictionaries, key to sort by and output file name
 #Output: None
 
-	# if col == 'First':
-	# 	#sort by first name
-	# 	sorted_list = sorted(a, key=lambda x: x['First'])
-	# elif col == 'Last':
-	# 	#sort by last name
-	# 	sorted_list = sorted(a, key=lambda x: x['Last'])
-	# else:
-	# 	#sort by email address
-	# 	sorted_list = sorted(a, key=lambda x: x['Email'])
-	
-	# csv_output = open(fileName, 'w')
-	# #csv_output.write('First, Last, Email, Class, DOB')
 	sorted_list = sorted(a, key=lambda x: x[col])
-
 
 	with open(fileName, 'w') as output:
 	 	for dict in sorted_list:
 	 		input_string = dict['First'] + ',' + dict['Last'] + ',' + dict['Email'] + ',' + '\n'
 	 		output.write(input_string)
-
-	 		
-	
-
-
-
-
-
 
 
 ################################################################

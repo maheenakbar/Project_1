@@ -1,5 +1,7 @@
 import os
 import csv
+import filecmp
+from datetime import date
 
 def getData(file):
 #Input: file name
@@ -34,15 +36,7 @@ def mySort(data,col):
 #Output: Return a string of the form firstName lastName
 
 	#Your code here:
-	if col == 'First':
-		#sort by first name
-		sorted_list = sorted(data, key=lambda x: x['First'])
-	elif col == 'Last':
-		#sort by last name
-		sorted_list = sorted(data, key=lambda x: x['Last'])
-	else:
-		#sort by email address
-		sorted_list = sorted(data, key=lambda x: x['Email'])
+	sorted_list = sorted(data, key=lambda x: x[col])
 
 	return sorted_list[0]['First'] + ' ' + sorted_list[0]['Last']
 
@@ -124,8 +118,32 @@ def mySortPrint(a,col,fileName):
 #Input: list of dictionaries, key to sort by and output file name
 #Output: None
 
-	#Your code here:
-	pass
+	# if col == 'First':
+	# 	#sort by first name
+	# 	sorted_list = sorted(a, key=lambda x: x['First'])
+	# elif col == 'Last':
+	# 	#sort by last name
+	# 	sorted_list = sorted(a, key=lambda x: x['Last'])
+	# else:
+	# 	#sort by email address
+	# 	sorted_list = sorted(a, key=lambda x: x['Email'])
+	
+	# csv_output = open(fileName, 'w')
+	# #csv_output.write('First, Last, Email, Class, DOB')
+	sorted_list = sorted(a, key=lambda x: x[col])
+
+
+	with open(fileName, 'w') as output:
+	 	for dict in sorted_list:
+	 		input_string = dict['First'] + ',' + dict['Last'] + ',' + dict['Email'] + ',' + '\n'
+	 		output.write(input_string)
+
+	 		
+	
+
+
+
+
 
 
 
@@ -151,7 +169,7 @@ def main():
 	print("Read in Test data and store as a list of dictionaries")
 	data = getData('P1DataA.csv')
 	data2 = getData('P1DataB.csv')
-	total += test(type(data),type([]),35)
+	total += test(type(data),type([]),40)
 	print()
 	print("First student sorted by First name:")
 	total += test(mySort(data,'First'),'Abbot Le',15)
